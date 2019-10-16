@@ -5,10 +5,11 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using LatihanASP.EntityFramworks;
+using LatihanASP.ViewModels.ProductCustom.Items;
 
-namespace LatihanASP.ViewModels
+namespace LatihanASP.ViewModels.ProductCustom.Items
 {
-    public class GarmentItemsViewModel
+    public class GarmentItemsViewModel : IProductItem
     {
         public int ProductID { get; set; }
         public string ProductDescription { get; set; }
@@ -21,6 +22,8 @@ namespace LatihanASP.ViewModels
         public string Color { get; set; }
         public string Size { get; set; }
         public string AgeGroup { get; set; }
+        public string UnitOfMeasurement { get; set; }
+        public string CostRate { get; set; }
 
         public GarmentItemsViewModel()
         {
@@ -29,7 +32,7 @@ namespace LatihanASP.ViewModels
 
         public GarmentItemsViewModel(Product product)
         {
-            char[] delimiter = { '|' };
+            char[] delimiter = { ';' };
             this.ProductID = product.ProductID;
 
             if (!string.IsNullOrEmpty(product.ProductDetail))
@@ -46,10 +49,12 @@ namespace LatihanASP.ViewModels
                 this.Color = prod[7];
                 this.Size = prod[8];
                 this.AgeGroup = prod[9];
+                this.UnitOfMeasurement = prod[10];
+                this.CostRate = prod[11];
             }
         }
 
-        public Dictionary<string, object> fromGarmentToDict()
+        public Dictionary<string, object> fromItemToDict()
         {
             Dictionary<string, object> garmentDict = new Dictionary<string, object>();
 
@@ -64,23 +69,31 @@ namespace LatihanASP.ViewModels
             garmentDict.Add("Color", this.Color);
             garmentDict.Add("Size", this.Size);
             garmentDict.Add("AgeGroup", this.AgeGroup);
+            garmentDict.Add("UnitOfMeasurement", this.UnitOfMeasurement);
+            garmentDict.Add("CostRate", this.CostRate);
 
             return garmentDict;
         }
 
-        public string convertToString()
+        public string ConvertToItem()
         {
             return
-                this.ProductDescription + "|" +
-                this.ProductionCode + "|" +
-                this.ProductionDate + "|" +
-                this.GarmentsType + "|" +
-                this.Fabrics + "|" +
-                this.GenderRelated + "|" +
-                this.IsWaterProof + "|" +
-                this.Color + "|" +
-                this.Size + "|" +
-                this.AgeGroup;
+                this.ProductDescription + ";" +
+                this.ProductionCode + ";" +
+                this.ProductionDate + ";" +
+                this.GarmentsType + ";" +
+                this.Fabrics + ";" +
+                this.GenderRelated + ";" +
+                this.IsWaterProof + ";" +
+                this.Color + ";" +
+                this.Size + ";" +
+                this.AgeGroup + ";" +
+                this.UnitOfMeasurement + ";" +
+                this.CostRate;
+        }
+        public decimal unitPriceItemCalculation()
+        {
+            return decimal.Parse(this.CostRate) * (Convert.ToDecimal(110) / Convert.ToDecimal(100));
         }
     }
 }

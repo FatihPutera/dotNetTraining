@@ -5,10 +5,11 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using LatihanASP.EntityFramworks;
+using LatihanASP.ViewModels.ProductCustom.Services;
 
-namespace LatihanASP.ViewModels
+namespace LatihanASP.ViewModels.ProductCustom.Services
 {
-    public class TransportationServicesViewModel
+    public class TransportationServicesViewModel : IProductService
     {
         public int ProductID { get; set; }
         public string ProductDescription { get; set; }
@@ -25,7 +26,7 @@ namespace LatihanASP.ViewModels
 
         public TransportationServicesViewModel(Product product)
         {
-            char[] delimiter = { '|' };
+            char[] delimiter = { ';' };
             this.ProductID = product.ProductID;
 
             if (!string.IsNullOrEmpty(product.ProductDetail))
@@ -41,7 +42,7 @@ namespace LatihanASP.ViewModels
             }
         }
 
-        public Dictionary<string, object> fromTransportationToDict()
+        public Dictionary<string, object> fromServiceToDict()
         {
             Dictionary<string, object> transDict = new Dictionary<string, object>();
 
@@ -56,15 +57,42 @@ namespace LatihanASP.ViewModels
             return transDict;
         }
 
-        public string convertToString()
+        public string ConvertToService()
         {
             return
-                this.ProductDescription + "|" +
-                this.VehicleType + "|" +
-                this.RoutePath + "|" +
-                this.RouteMilleage + "|" +
-                this.CostCalculationMethod + "|" +
+                this.ProductDescription + ";" +
+                this.VehicleType + ";" +
+                this.RoutePath + ";" +
+                this.RouteMilleage + ";" +
+                this.CostCalculationMethod + ";" +
                 this.CostRate;
+        }
+
+        public decimal? rateCostCalculation(string condition = null, int? userDemand = null, decimal? Duration = null)
+        {
+            int? valueResult = null;
+            if (CostCalculationMethod.Equals("FixPerRoute"))
+            {
+                valueResult = 1 * Int32.Parse(CostRate);
+            }
+            if (CostCalculationMethod.Equals("PerMiles"))
+            {
+                valueResult = Int32.Parse(RouteMilleage) * (Int32.Parse(CostRate) / 2);
+            }
+            if (CostCalculationMethod.Equals("PerMilesWithCondition"))
+            {
+                var nilai = 0;
+                if (condition == "GoodWeather")
+                {
+                    nilai = 5;
+                }
+                else if (condition == "BadWeather")
+                {
+                    nilai = 15;
+                }
+                valueResult = (Int32.Parse(RouteMilleage) * Int32.Parse(CostRate) / 2) * (((nilai + (userDemand / 50)) + 95)) / 100;
+            }
+            return valueResult * (Convert.ToDecimal(110) / Convert.ToDecimal(100));
         }
     }
 }

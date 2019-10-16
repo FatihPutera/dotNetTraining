@@ -6,6 +6,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using LatihanASP.EntityFramworks;
 using AutoMapper;
+using LatihanASP.ViewModels.ProductCustom.Items;
+using LatihanASP.ViewModels.ProductCustom.Services;
 
 namespace LatihanASP.ViewModels.ProductCustom
 {
@@ -36,19 +38,19 @@ namespace LatihanASP.ViewModels.ProductCustom
                 {
                     case "FoodAndBeverageItems":
                         FoodsAndBeverageItemsViewModel food = new FoodsAndBeverageItemsViewModel(product);
-                        ProductDetail = food.fromFoodToDict();
+                        ProductDetail = food.fromItemToDict();
                         break;
                     case "GarmentItems":
                         GarmentItemsViewModel garment = new GarmentItemsViewModel(product);
-                        ProductDetail = garment.fromGarmentToDict();
+                        ProductDetail = garment.fromItemToDict();
                         break;
                     case "MaterialItems":
                         MaterialItemsViewModel materi = new MaterialItemsViewModel(product);
-                        ProductDetail = materi.fromMaterialToDict();
+                        ProductDetail = materi.fromItemToDict();
                         break;
                     case "TransportationServices":
                         TransportationServicesViewModel trans = new TransportationServicesViewModel(product);
-                        ProductDetail = trans.fromTransportationToDict();
+                        ProductDetail = trans.fromServiceToDict();
                         break;
                     default:
                         ProductDetail = null;
@@ -61,31 +63,31 @@ namespace LatihanASP.ViewModels.ProductCustom
             }
         }
 
-        public Product convertToProduct()
+        public Product convertToProduct(string condition = null, int? userDemand = null, decimal? Duration = null)
         {
             var description = "";
             var config = new MapperConfiguration(cfg => { });
             var mapper = new Mapper(config);
 
-            if (this.ProductType.Contains("FoodAndBeverageItems"))
+            if (this.ProductType.Equals("FoodAndBeverageItems"))
             {
                 FoodsAndBeverageItemsViewModel foods = mapper.Map<FoodsAndBeverageItemsViewModel>(this.ProductDetail);
-                description = foods.convertToString();
+                description = foods.ConvertToItem();
             }
-            else if (this.ProductType.Contains("MaterialItems"))
+            else if (this.ProductType.Equals("MaterialItems"))
             {
                 MaterialItemsViewModel materials = mapper.Map<MaterialItemsViewModel>(this.ProductDetail);
-                description = materials.convertToString();
+                description = materials.ConvertToItem();
             }
-            else if (this.ProductType.Contains("GarmentItems"))
+            else if (this.ProductType.Equals("GarmentItems"))
             {
                 GarmentItemsViewModel garments = mapper.Map<GarmentItemsViewModel>(this.ProductDetail);
-                description = garments.convertToString();
+                description = garments.ConvertToItem();
             }
             else if (this.ProductType.Contains("TransportationServices"))
             {
                 TransportationServicesViewModel transportations = mapper.Map<TransportationServicesViewModel>(this.ProductDetail);
-                description = transportations.convertToString();
+                description = transportations.ConvertToService();
             }
 
             return new Product()
