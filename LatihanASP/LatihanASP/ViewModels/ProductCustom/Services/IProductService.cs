@@ -9,6 +9,7 @@ namespace LatihanASP.ViewModels.ProductCustom.Services
 {
         interface IProductService
         {
+            char Delimiter();
             Dictionary<string, object> fromServiceToDict();
             string ConvertToService();
 

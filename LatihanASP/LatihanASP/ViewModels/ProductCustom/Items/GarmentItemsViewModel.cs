@@ -29,15 +29,19 @@ namespace LatihanASP.ViewModels.ProductCustom.Items
         {
 
         }
+        public char Delimiter()
+        {
+            return '\'';
+        }
 
         public GarmentItemsViewModel(Product product)
         {
-            char[] delimiter = { ';' };
+            
             this.ProductID = product.ProductID;
 
             if (!string.IsNullOrEmpty(product.ProductDetail))
             {
-                string[] prod = product.ProductDetail.Split(delimiter);
+                string[] prod = product.ProductDetail.Split(Delimiter());
 
                 this.ProductDescription = prod[0];
                 this.ProductionCode = prod[1];
@@ -78,17 +82,17 @@ namespace LatihanASP.ViewModels.ProductCustom.Items
         public string ConvertToItem()
         {
             return
-                this.ProductDescription + ";" +
-                this.ProductionCode + ";" +
-                this.ProductionDate + ";" +
-                this.GarmentsType + ";" +
-                this.Fabrics + ";" +
-                this.GenderRelated + ";" +
-                this.IsWaterProof + ";" +
-                this.Color + ";" +
-                this.Size + ";" +
-                this.AgeGroup + ";" +
-                this.UnitOfMeasurement + ";" +
+                this.ProductDescription + Delimiter() +
+                this.ProductionCode + Delimiter() +
+                this.ProductionDate + Delimiter() +
+                this.GarmentsType + Delimiter() +
+                this.Fabrics + Delimiter() +
+                this.GenderRelated + Delimiter() +
+                this.IsWaterProof + Delimiter() +
+                this.Color + Delimiter() +
+                this.Size + Delimiter() +
+                this.AgeGroup + Delimiter() +
+                this.UnitOfMeasurement + Delimiter() +
                 this.CostRate;
         }
         public decimal unitPriceItemCalculation()

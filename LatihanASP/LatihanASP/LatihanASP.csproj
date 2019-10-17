@@ -209,7 +209,7 @@
     <Compile Include="ViewModels\ProductCustom\Items\FoodsAndBeverageItemsViewModel.cs" />
     <Compile Include="ViewModels\ProductCustom\CostCalculationViewModel.cs" />
     <Compile Include="ViewModels\ProductCustom\Items\GarmentItemsViewModel.cs" />
-    <Compile Include="ViewModels\ProductCustom\Items\IProductService.cs" />
+    <Compile Include="ViewModels\ProductCustom\Items\IProductItems.cs" />
     <Compile Include="ViewModels\ProductCustom\Items\MaterialItemsViewModel.cs" />
     <Compile Include="ViewModels\ProductCustom\ProductCustomViewModel.cs" />
     <Compile Include="ViewModels\ProductCustom\Services\IProductService.cs" />

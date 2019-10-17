@@ -28,14 +28,19 @@ namespace LatihanASP.ViewModels.ProductCustom.Items
 
         }
 
+        public char Delimiter()
+        {
+            return '\'';
+        }
+
         public FoodsAndBeverageItemsViewModel(Product product)
         {
-            char[] delimiter = { ';' };
+            
             this.ProductID = product.ProductID;
 
             if (!string.IsNullOrEmpty(product.ProductDetail))
             {
-                string[] prod = product.ProductDetail.Split(delimiter);
+                string[] prod = product.ProductDetail.Split(Delimiter());
 
                 this.ProductDescription = prod[0];
                 this.ProductionCode = prod[1];
@@ -71,15 +76,15 @@ namespace LatihanASP.ViewModels.ProductCustom.Items
         public string ConvertToItem()
         {
             return
-                this.ProductDescription + ";" +
-                this.ProductionCode + ";" +
-                this.ProductionDate + ";" +
-                this.ExpiredDate + ";" +
-                this.NetWeight + ";" +
-                this.Ingredients + ";" +
-                this.DailyValue + ";" +
-                this.Certification + ";" +
-                this.UnitOfMeasurement + ";" +
+                this.ProductDescription + Delimiter() +
+                this.ProductionCode + Delimiter() +
+                this.ProductionDate + Delimiter() +
+                this.ExpiredDate + Delimiter() +
+                this.NetWeight + Delimiter() +
+                this.Ingredients + Delimiter() +
+                this.DailyValue + Delimiter() +
+                this.Certification + Delimiter() +
+                this.UnitOfMeasurement + Delimiter() +
                 this.CostRate;
         }
 

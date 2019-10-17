@@ -15,9 +15,7 @@ namespace LatihanASP.ViewModels.ProductCustom
     {
         public ProductCustomViewModel()
         {
-
         }
-
         public ProductCustomViewModel(Product product)
         {
             ProductID = product.ProductID;
@@ -31,7 +29,6 @@ namespace LatihanASP.ViewModels.ProductCustom
             ReorderLevel = product.ReorderLevel;
             Discontinued = product.Discontinued;
             ProductType = product.ProductType;
-
             if (ProductType != null)
             {
                 switch (ProductType)
@@ -52,6 +49,10 @@ namespace LatihanASP.ViewModels.ProductCustom
                         TransportationServicesViewModel trans = new TransportationServicesViewModel(product);
                         ProductDetail = trans.fromServiceToDict();
                         break;
+                    case "TelecommunicationServices":
+                        TelecomunicationServiceViewModel telecomunication = new TelecomunicationServiceViewModel(product);
+                        ProductDetail = telecomunication.fromServiceToDict();
+                        break;
                     default:
                         ProductDetail = null;
                         break;
@@ -62,34 +63,47 @@ namespace LatihanASP.ViewModels.ProductCustom
                 ProductDetail = null;
             }
         }
-
         public Product convertToProduct(string condition = null, int? userDemand = null, decimal? Duration = null)
         {
-            var description = "";
+            decimal? price = null;
+            var prodDet = "";
             var config = new MapperConfiguration(cfg => { });
             var mapper = new Mapper(config);
-
             if (this.ProductType.Equals("FoodAndBeverageItems"))
             {
-                FoodsAndBeverageItemsViewModel foods = mapper.Map<FoodsAndBeverageItemsViewModel>(this.ProductDetail);
-                description = foods.ConvertToItem();
+                FoodsAndBeverageItemsViewModel food = mapper.Map<FoodsAndBeverageItemsViewModel>(this.ProductDetail);
+                prodDet = food.ConvertToItem();
+                price = food.unitPriceItemCalculation();
             }
             else if (this.ProductType.Equals("MaterialItems"))
             {
-                MaterialItemsViewModel materials = mapper.Map<MaterialItemsViewModel>(this.ProductDetail);
-                description = materials.ConvertToItem();
+                MaterialItemsViewModel materi = mapper.Map<MaterialItemsViewModel>(this.ProductDetail);
+                prodDet = materi.ConvertToItem();
+                price = materi.unitPriceItemCalculation();
             }
             else if (this.ProductType.Equals("GarmentItems"))
             {
-                GarmentItemsViewModel garments = mapper.Map<GarmentItemsViewModel>(this.ProductDetail);
-                description = garments.ConvertToItem();
+                GarmentItemsViewModel garment = mapper.Map<GarmentItemsViewModel>(this.ProductDetail);
+                prodDet = garment.ConvertToItem();
+                price = garment.unitPriceItemCalculation();
             }
-            else if (this.ProductType.Contains("TransportationServices"))
+            else if (this.ProductType.Equals("TransportationServices"))
             {
-                TransportationServicesViewModel transportations = mapper.Map<TransportationServicesViewModel>(this.ProductDetail);
-                description = transportations.ConvertToService();
+                TransportationServicesViewModel trans = mapper.Map<TransportationServicesViewModel>(this.ProductDetail);
+                prodDet = trans.ConvertToService();
+                price = trans.rateCostCalculation(condition, userDemand, Duration);
             }
-
+            else if (this.ProductType.Equals("TelecommunicationServices"))
+            {
+                TelecomunicationServiceViewModel tele = mapper.Map<TelecomunicationServiceViewModel>(this.ProductDetail);
+                prodDet = tele.ConvertToService();
+                price = tele.rateCostCalculation(condition, userDemand, Duration);
+            }
+            else
+            {
+                price = 0;
+                ProductDetail = null;
+            }
             return new Product()
             {
                 ProductID = this.ProductID,
@@ -97,17 +111,17 @@ namespace LatihanASP.ViewModels.ProductCustom
                 SupplierID = this.SupplierID,
                 CategoryID = this.CategoryID,
                 QuantityPerUnit = this.QuantityPerUnit,
-                UnitPrice = this.UnitPrice,
+                UnitPrice = price,
                 UnitsInStock = this.UnitsInStock,
                 UnitsOnOrder = this.UnitsOnOrder,
                 ReorderLevel = this.ReorderLevel,
                 Discontinued = this.Discontinued,
                 ProductType = this.ProductType,
-                ProductDetail = description,
+                ProductDetail = prodDet
             };
         }
 
-        public Dictionary<string, object> FinalResult(List<ProductCustomViewModel> listObject = null, string msg = "")
+        public Dictionary<string, object> FinalResult(List<ProductCustomViewModel> listObject, string msg)
         {
             Dictionary<string, object> result = new Dictionary<string, object>();
             result.Add("Message", msg);

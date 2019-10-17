@@ -44,16 +44,28 @@ namespace LatihanASP.Controllers
 
         [Route("Create")]
         [HttpPost]
-        public IHttpActionResult Create([FromBody] ProductCustomViewModel dataBody)
+        public IHttpActionResult Create([FromBody] ProductCustomViewModel dataBody, string condition = null, int? userDemand = null, decimal? Duration = null)
         {
             try
             {
                 using (var db = new DB_Context())
                 {
-                    Product product = dataBody.convertToProduct();
+                    Product product = new Product();
+                    if (condition == null && userDemand == null && Duration != null)
+                    {
+                        product = dataBody.convertToProduct(null, null, Duration);
+                    }
+                    else if (condition != null && userDemand != null && Duration == null)
+                    {
+                        product = dataBody.convertToProduct(condition, userDemand, null);
+                    }
+                    else if (condition == null && userDemand == null && Duration == null)
+                    {
+                        product = dataBody.convertToProduct(condition, userDemand, null);
+                    }
                     db.Products.Add(product);
                     db.SaveChanges();
-                    return Ok("Create Data Success");
+                    return Ok("Data Saved Successfully");
                 }
             }
             catch (Exception)
@@ -81,6 +93,28 @@ namespace LatihanASP.Controllers
                 {
                     throw;
                 }
+            }
+        }
+
+        [Route("calculateProductUnitPrice ")]
+        [HttpPost]
+        public IHttpActionResult calculateProductUnitPrice([FromBody] ProductCustomViewModel dataBody)
+        {
+            try
+            {
+                using (var db = new DB_Context())
+                {
+                    var temp = db.Products.AsQueryable();
+                    Dictionary<string, object> result = new Dictionary<string, object>();
+                    Product product = dataBody.convertToProduct();
+                    db.Products.Add(product);
+                    db.SaveChanges();
+                    return Ok("Data Saved Successfully");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
 

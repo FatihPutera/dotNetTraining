@@ -23,15 +23,19 @@ namespace LatihanASP.ViewModels.ProductCustom.Services
         {
 
         }
+        public char Delimiter()
+        {
+            return '\'';
+        }
 
         public TransportationServicesViewModel(Product product)
         {
-            char[] delimiter = { ';' };
+            
             this.ProductID = product.ProductID;
 
             if (!string.IsNullOrEmpty(product.ProductDetail))
             {
-                string[] prod = product.ProductDetail.Split(delimiter);
+                string[] prod = product.ProductDetail.Split(Delimiter());
 
                 this.ProductDescription = prod[0];
                 this.VehicleType = prod[1];
@@ -60,11 +64,11 @@ namespace LatihanASP.ViewModels.ProductCustom.Services
         public string ConvertToService()
         {
             return
-                this.ProductDescription + ";" +
-                this.VehicleType + ";" +
-                this.RoutePath + ";" +
-                this.RouteMilleage + ";" +
-                this.CostCalculationMethod + ";" +
+                this.ProductDescription + Delimiter() +
+                this.VehicleType + Delimiter() +
+                this.RoutePath + Delimiter() +
+                this.RouteMilleage + Delimiter() +
+                this.CostCalculationMethod + Delimiter() +
                 this.CostRate;
         }
 

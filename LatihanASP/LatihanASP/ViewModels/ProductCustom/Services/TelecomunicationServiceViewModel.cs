@@ -18,6 +18,10 @@ namespace LatihanASP.ViewModels.ProductCustom.Services
         public string CostCalculationMethod { get; set; }
         public string CostRate { get; set; }
 
+        public char Delimiter()
+        {
+            return '\'';
+        }
         public TelecomunicationServiceViewModel()
         {
 
@@ -25,11 +29,11 @@ namespace LatihanASP.ViewModels.ProductCustom.Services
 
         public TelecomunicationServiceViewModel(Product product)
         {
-            char[] delimiter = { ';' };
+            
             this.ProductID = product.ProductID;
             if (!string.IsNullOrEmpty(product.ProductDetail))
             {
-                string[] prod = product.ProductDetail.Split(delimiter);
+                string[] prod = product.ProductDetail.Split(Delimiter());
                 this.ProductDescription = prod[0];
                 this.PacketType = prod[1];
                 this.PacketLimit = prod[2];
@@ -53,10 +57,10 @@ namespace LatihanASP.ViewModels.ProductCustom.Services
         public string ConvertToService()
         {
             return
-                this.ProductDescription + ";" +
-                this.PacketType + ";" +
-                this.PacketLimit + ";" +
-                this.CostCalculationMethod + ";" +
+                this.ProductDescription + Delimiter() +
+                this.PacketType + Delimiter() +
+                this.PacketLimit + Delimiter() +
+                this.CostCalculationMethod + Delimiter() +
                 this.CostRate;
         }
 

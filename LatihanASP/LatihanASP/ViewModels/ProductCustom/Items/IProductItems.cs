@@ -10,6 +10,7 @@ namespace LatihanASP.ViewModels.ProductCustom.Items
 {
     interface IProductItem
     {
+        char Delimiter();
         string UnitOfMeasurement { get; set; }
         string CostRate { get; set; }
         Dictionary<string, object> fromItemToDict();

@@ -20,7 +20,10 @@ namespace LatihanASP.ViewModels.ProductCustom.Items
         public string IsConsumable { get; set; }
         public string UnitOfMeasurement { get; set; }
         public string CostRate { get; set; }
-
+        public char Delimiter()
+        {
+            return '\'';
+        }
 
         public MaterialItemsViewModel()
         {
@@ -29,12 +32,12 @@ namespace LatihanASP.ViewModels.ProductCustom.Items
 
         public MaterialItemsViewModel(Product product)
         {
-            char[] delimiter = { ';' };
+           
             this.ProductID = product.ProductID;
 
             if (!string.IsNullOrEmpty(product.ProductDetail))
             {
-                string[] prod = product.ProductDetail.Split(delimiter);
+                string[] prod = product.ProductDetail.Split(Delimiter());
 
                 this.ProductDescription = prod[0];
                 this.ProductionCode = prod[1];
@@ -67,13 +70,13 @@ namespace LatihanASP.ViewModels.ProductCustom.Items
         public string ConvertToItem()
         {
             return
-                this.ProductDescription + ";" +
-                this.ProductionCode + ";" +
-                this.ProductionDate + ";" +
-                this.ExpiredDate + ";" +
-                this.MaterialsType + ";" +
-                this.IsConsumable + ";" +
-                this.UnitOfMeasurement + ";" +
+                this.ProductDescription + Delimiter() +
+                this.ProductionCode + Delimiter() +
+                this.ProductionDate + Delimiter() +
+                this.ExpiredDate + Delimiter() +
+                this.MaterialsType + Delimiter() +
+                this.IsConsumable + Delimiter() +
+                this.UnitOfMeasurement + Delimiter() +
                 this.CostRate;
         }
 
